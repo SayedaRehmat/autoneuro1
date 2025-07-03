@@ -46,35 +46,31 @@ if uploaded:
                 break
         if gene:
             pred = model.predict([gene])[0]
-# Gene Info Lookup (Improved)
-try:
-    query_url = f"https://mygene.info/v3/query?q=symbol:{gene}&species=human&fields=name,summary"
-    response = requests.get(query_url, timeout=5)
-    info_data = response.json()
 
-    if info_data.get("hits") and len(info_data["hits"]) > 0:
-        hit = info_data["hits"][0]
-        fullname = hit.get("name", "Not available")
-        desc = hit.get("summary", "No description available.")
-    else:
-        fullname = "Not available"
-        desc = "No description found in gene database."
-except Exception as e:
-    fullname = "Unavailable"
-    desc = "⚠️ Error fetching gene information."
+            # Gene Info Lookup (Improved)
+            try:
+                query_url = f"https://mygene.info/v3/query?q=symbol:{gene}&species=human&fields=name,summary"
+                response = requests.get(query_url, timeout=5)
+                info_data = response.json()
 
-# Display results
-st.markdown(f"""
+                if info_data.get("hits") and len(info_data["hits"]) > 0:
+                    hit = info_data["hits"][0]
+                    fullname = hit.get("name", "Not available")
+                    desc = hit.get("summary", "No description available.")
+                else:
+                    fullname = "Not available"
+                    desc = "No description found in gene database."
+            except Exception as e:
+                fullname = "Unavailable"
+                desc = "⚠️ Error fetching gene information."
+
+            # Display results
+            st.markdown(f"""
 **🧬 Gene:** `{gene}`  
 - **Prediction:** 🧠 `{pred}`  
 - **Full Name:** {fullname}  
 - **Description:** {desc}
 """)
-
-             
-
-
-            
 
             predictions.append({
                 "Gene": gene,
