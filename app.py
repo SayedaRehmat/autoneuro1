@@ -1,5 +1,7 @@
-import streamlit as st
+ import streamlit as st
 import joblib
+import pandas as pd
+import io
 
 # Load model
 model = joblib.load("gene_classifier.pkl")
@@ -9,24 +11,25 @@ st.title("🧬 AutoNeuro: Cancer vs Neuro Gene Classifier")
 st.markdown("""
 Welcome to **AutoNeuro**, an AI-powered gene classifier that predicts whether a gene is associated with **cancer** or **neurological disorders** using simple VCF files.
 
-**Built by Sayeda Rehmat**, this tool is designed for bioinformatics students, researchers, and healthcare professionals.
+**Built by Zisha Maryam**, this tool is designed for bioinformatics students, researchers, and healthcare professionals.
 
 👉 Just upload your `.vcf` file below to get started.
 """)
 
-# Download Sample
+# Sample VCF download
 with open("sample.vcf", "r") as f:
     st.download_button("📥 Download Sample VCF", f.read(), "sample.vcf", "text/plain")
 
-# File upload
-uploaded = st.file_uploader("📤 Upload your VCF file here", type="vcf")
+# Upload VCF file
+uploaded = st.file_uploader("📤 Upload your VCF file", type="vcf")
 
-# Prediction
+# Predict and Export
 if uploaded:
     lines = uploaded.read().decode("utf-8").splitlines()
     st.success("✅ File uploaded and processed.")
-    
     st.subheader("🔬 Gene Predictions:")
+
+    predictions = []
 
     for line in lines:
         if line.startswith("#"):
@@ -41,7 +44,19 @@ if uploaded:
                 gene = entry.split("=")[1]
                 break
         if gene:
-            prediction = model.predict([gene])[0]
-            st.markdown(f"- 🧬 **{gene}** → 🧠 **{prediction}**")
+            pred = model.predict([gene])[0]
+            predictions.append({"Gene": gene, "Prediction": pred})
+            st.markdown(f"- 🧬 **{gene}** → 🧠 **{pred}**")
         else:
             st.warning("⚠️ Gene not found in INFO field.")
+
+    # Export CSV
+    if predictions:
+        df = pd.DataFrame(predictions)
+        csv = df.to_csv(index=False)
+        st.download_button(
+            label="📄 Download Results as CSV",
+            data=csv,
+            file_name="autoneuro_predictions.csv",
+            mime="text/csv"
+        )
