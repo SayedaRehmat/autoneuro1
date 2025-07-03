@@ -65,12 +65,12 @@ if uploaded:
                     desc = "No description found in gene database."
             except Exception:
                 fullname = "Unavailable"
-                desc = "⚠️ Error fetching gene information."
+                desc = "Error fetching gene information."
 
             # Show results in app
             st.markdown(f"""
-**🧬 Gene:** `{gene}`  
-- **Prediction:** 🧠 `{pred}`  
+**Gene:** `{gene}`  
+- **Prediction:** `{pred}`  
 - **Full Name:** {fullname}  
 - **Description:** {desc}
 """)
@@ -102,13 +102,19 @@ if uploaded:
             pdf.ln(10)
 
             for row in data:
+                gene_line = f"Gene: {row['Gene']} — Prediction: {row['Prediction']}"
                 pdf.set_font("Arial", "B", size=11)
-                pdf.cell(200, 8, txt=f"Gene: {row['Gene']} — Prediction: {row['Prediction']}", ln=True)
+                pdf.cell(200, 8, txt=gene_line.encode('latin-1', 'replace').decode('latin-1'), ln=True)
+
                 pdf.set_font("Arial", size=10)
-                pdf.multi_cell(0, 6, f"Full Name: {row['Full Name']}\nDescription: {row['Description']}", border=0)
+                full_line = f"Full Name: {row['Full Name']}"
+                desc_line = f"Description: {row['Description']}"
+
+                pdf.multi_cell(0, 6, txt=full_line.encode('latin-1', 'replace').decode('latin-1'))
+                pdf.multi_cell(0, 6, txt=desc_line.encode('latin-1', 'replace').decode('latin-1'))
                 pdf.ln(4)
 
-            return pdf.output(dest='S').encode('latin1')
+            return pdf.output(dest='S').encode('latin-1')
 
         pdf_data = generate_pdf(predictions)
         st.download_button(
