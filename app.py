@@ -7,18 +7,33 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 
-# User config
-names = ["Sayeda Rehmat", "Pro User"]
-usernames = ["sayeda", "user1"]
-passwords = ["autoneuro123", "testpass"]
-hashed_pw = stauth.Hasher(passwords).generate()
+ # Pre-hashed passwords (bcrypt)
+hashed_pw = {
+    "sayeda": "$2b$12$BhkxFP8QKm2CO6EVNvCmUuJ8nQih1nC1wU/M0vN2zyP4cyYbveCEi",
+    "user1": "$2b$12$fH0vlSw/4GG3XhnTTx3pzeLUZivN.gJDL7Zctyi9ARmjMRdCmh6Vi"
+}
 
-# Authenticator
 config = {
     'credentials': {
         'usernames': {
-            usernames[0]: {'name': names[0], 'password': hashed_pw[0]},
-            usernames[1]: {'name': names[1], 'password': hashed_pw[1]},
+            'sayeda': {
+                'name': "Sayeda Rehmat",
+                'password': hashed_pw["sayeda"]
+            },
+            'user1': {
+                'name': "Pro User",
+                'password': hashed_pw["user1"]
+            }
+        }
+    },
+    'cookie': {
+        'name': 'auto_cookie',
+        'key': '123456',
+        'expiry_days': 1
+    },
+    'preauthorized': {'emails': []}
+}
+
         }
     },
     'cookie': {'name': 'auto_cookie', 'key': '123456', 'expiry_days': 1},
