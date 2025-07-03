@@ -4,15 +4,14 @@ import pandas as pd
 import requests
 from fpdf import FPDF
 import streamlit_authenticator as stauth
-import yaml
-from yaml.loader import SafeLoader
 
- # Pre-hashed passwords (bcrypt)
+# Pre-hashed passwords
 hashed_pw = {
     "sayeda": "$2b$12$BhkxFP8QKm2CO6EVNvCmUuJ8nQih1nC1wU/M0vN2zyP4cyYbveCEi",
     "user1": "$2b$12$fH0vlSw/4GG3XhnTTx3pzeLUZivN.gJDL7Zctyi9ARmjMRdCmh6Vi"
 }
 
+# Authenticator config
 config = {
     'credentials': {
         'usernames': {
@@ -31,13 +30,9 @@ config = {
         'key': '123456',
         'expiry_days': 1
     },
-    'preauthorized': {'emails': []}
-}
-
-        }
-    },
-    'cookie': {'name': 'auto_cookie', 'key': '123456', 'expiry_days': 1},
-    'preauthorized': {'emails': []}
+    'preauthorized': {
+        'emails': []
+    }
 }
 
 authenticator = stauth.Authenticate(
@@ -57,17 +52,15 @@ if auth_status:
     # Load model
     model = joblib.load("gene_classifier.pkl")
 
-    # Session results
     if "user_results" not in st.session_state:
         st.session_state.user_results = []
 
-    # Title
     st.title("🧬 AutoNeuro: Cancer vs Neuro Gene Classifier")
     st.markdown(f"""
-    Welcome back, **{name}** 👋  
-    Upload your `.vcf` file to classify genes into **cancer** or **neuro-related**.  
-    Your past results will appear in the Pro Dashboard.
-    """)
+Welcome back, **{name}** 👋  
+This is **AutoNeuro Pro** — upload a `.vcf` file to classify genes as **Cancer** or **Neuro** related.  
+Your results are saved to your personal session dashboard.
+""")
 
     with open("sample.vcf", "r") as f:
         st.download_button("📥 Download Sample VCF", f.read(), "sample.vcf", "text/plain")
@@ -129,14 +122,13 @@ if auth_status:
                     "Description": desc
                 })
 
-        # Save to session
         if predictions:
-            st.session_state.user_results.extend(predictions)
             df = pd.DataFrame(predictions)
+            st.session_state.user_results.extend(predictions)
+
             csv = df.to_csv(index=False)
             st.download_button("📄 Download CSV", data=csv, file_name="autoneuro_predictions.csv", mime="text/csv")
 
-            # Generate PDF
             def generate_pdf(data):
                 pdf = FPDF()
                 pdf.add_page()
@@ -158,12 +150,11 @@ if auth_status:
             pdf_data = generate_pdf(predictions)
             st.download_button("📑 Download PDF Report", data=pdf_data, file_name="autoneuro_report.pdf", mime="application/pdf")
 
-    # Dashboard
     if st.checkbox("📊 Show My Pro Dashboard"):
         if st.session_state.user_results:
             dashboard_df = pd.DataFrame(st.session_state.user_results)
             st.dataframe(dashboard_df)
-            st.download_button("📥 Export All Results as CSV", dashboard_df.to_csv(index=False), "full_results.csv", "text/csv")
+            st.download_button("📥 Export All Results", dashboard_df.to_csv(index=False), "full_results.csv", "text/csv")
         else:
             st.info("No results yet.")
 else:
