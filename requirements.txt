@@ -3,5 +3,5 @@ scikit-learn
 joblib
 pandas
 fpdf
-streamlit-authenticator
+streamlit-authenticator==0.2.2
 streamlit-extras
