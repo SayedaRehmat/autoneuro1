@@ -77,8 +77,8 @@ Pull requests are welcome!
 ## 👩‍💻 About the Creator
 
 **Sayeda Rehmat** — aspiring bioinformatics innovator  
-📧 [your-email@example.com]  
-🌐 [github.com/your-profile]  
+📧 [bc190408541]  
+🌐 [ https://github.com/SayedaRehmat]  
 🔬 Passionate about AI, Genomics & Impactful Tech
 
 ---
