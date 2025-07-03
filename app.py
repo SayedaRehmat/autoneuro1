@@ -47,16 +47,23 @@ if uploaded:
         if gene:
             pred = model.predict([gene])[0]
 
-            # Gene Info Lookup
-            response = requests.get(f"https://mygene.info/v3/query?q=symbol:{gene}&species=human")
-            info_data = response.json()
-            if info_data.get("hits"):
-                gene_info = info_data["hits"][0]
-                fullname = gene_info.get("name", "N/A")
-                desc = gene_info.get("summary", "No description available.")
-            else:
-                fullname = "N/A"
-                desc = "No description available."
+             # Gene Info Lookup (Improved)
+try:
+    query_url = f"https://mygene.info/v3/query?q=symbol:{gene}&species=human&fields=name,summary"
+    response = requests.get(query_url, timeout=5)
+    info_data = response.json()
+
+    if info_data.get("hits") and len(info_data["hits"]) > 0:
+        hit = info_data["hits"][0]
+        fullname = hit.get("name", "Not available")
+        desc = hit.get("summary", "No description available.")
+    else:
+        fullname = "Not available"
+        desc = "No description found in gene database."
+except Exception as e:
+    fullname = "Unavailable"
+    desc = "⚠️ Error fetching gene information."
+
 
             # Show results
             st.markdown(f"""
