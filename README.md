@@ -8,7 +8,7 @@ Built by ** Sayeda Rehmat**, this tool combines machine learning and bioinformat
 
 ## 🌐 Live App
 
-👉 [Click here to try the app](https://your-streamlit-app-link.streamlit.app)
+👉 [Click here to try the app]( https://autoneuro1-hucsops9okapprgphvwhnq.streamlit.app/)
 
 > Upload a `.vcf` file and see instant predictions for each gene.
 
