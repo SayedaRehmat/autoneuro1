@@ -1,7 +1,7 @@
-streamlit
+ streamlit
+streamlit-authenticator==0.2.2
 pandas
 requests
 fpdf
 joblib
 scikit-learn
-streamlit-authenticator==0.2.2
