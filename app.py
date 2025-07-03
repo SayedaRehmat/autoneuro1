@@ -46,8 +46,7 @@ if uploaded:
                 break
         if gene:
             pred = model.predict([gene])[0]
-
-             # Gene Info Lookup (Improved)
+# Gene Info Lookup (Improved)
 try:
     query_url = f"https://mygene.info/v3/query?q=symbol:{gene}&species=human&fields=name,summary"
     response = requests.get(query_url, timeout=5)
@@ -64,14 +63,18 @@ except Exception as e:
     fullname = "Unavailable"
     desc = "⚠️ Error fetching gene information."
 
+# Display results
+st.markdown(f"""
+**🧬 Gene:** `{gene}`  
+- **Prediction:** 🧠 `{pred}`  
+- **Full Name:** {fullname}  
+- **Description:** {desc}
+""")
 
-            # Show results
-            st.markdown(f"""
-            **🧬 Gene:** `{gene}`  
-            - **Prediction:** 🧠 `{pred}`  
-            - **Full Name:** {fullname}  
-            - **Description:** {desc}
-            """)
+             
+
+
+            
 
             predictions.append({
                 "Gene": gene,
