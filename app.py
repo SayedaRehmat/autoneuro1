@@ -9,7 +9,7 @@ st.title("🧬 AutoNeuro: Cancer vs Neuro Gene Classifier")
 st.markdown("""
 Welcome to **AutoNeuro**, an AI-powered gene classifier that predicts whether a gene is associated with **cancer** or **neurological disorders** using simple VCF files.
 
-**Built by Zisha Maryam**, this tool is designed for bioinformatics students, researchers, and healthcare professionals.
+**Built by Sayeda Rehmat**, this tool is designed for bioinformatics students, researchers, and healthcare professionals.
 
 👉 Just upload your `.vcf` file below to get started.
 """)
